@@ -44,7 +44,9 @@ import (
 	"io"
 	"io/ioutil"
 	"math"
+	"math/rand"
 	"net"
+	"sync"
 	"time"
 
 	"golang.org/x/net/context"
@@ -84,13 +86,21 @@ func (s *routeGuideServer) GetFeature(ctx context.Context, point *pb.Point) (*pb
 
 // ListFeatures lists all features contained within the given bounding Rectangle.
 func (s *routeGuideServer) ListFeatures(rect *pb.Rectangle, stream pb.RouteGuide_ListFeaturesServer) error {
+	var mutex = &sync.Mutex{}
 	for _, feature := range s.savedFeatures {
-		if inRange(feature.Location, rect) {
-			if err := stream.Send(feature); err != nil {
-				return err
+		go func(foo *pb.Feature) {
+			time.Sleep(time.Duration(rand.Intn(5)) * time.Second)
+			if inRange(foo.Location, rect) {
+				mutex.Lock()
+				if err := stream.Send(foo); err != nil {
+					// ok, dunno how to handle errors here, but POC
+					// return err
+				}
+				mutex.Unlock()
 			}
-		}
+		}(feature)
 	}
+	time.Sleep(7 * time.Second)
 	return nil
 }
 

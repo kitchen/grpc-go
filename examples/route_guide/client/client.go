@@ -186,10 +186,10 @@ func main() {
 	client := pb.NewRouteGuideClient(conn)
 
 	// Looking for a valid feature
-	printFeature(client, &pb.Point{Latitude: 409146138, Longitude: -746188906})
+	// printFeature(client, &pb.Point{Latitude: 409146138, Longitude: -746188906})
 
 	// Feature missing.
-	printFeature(client, &pb.Point{Latitude: 0, Longitude: 0})
+	// printFeature(client, &pb.Point{Latitude: 0, Longitude: 0})
 
 	// Looking for features between 40, -75 and 42, -73.
 	printFeatures(client, &pb.Rectangle{
@@ -197,9 +197,9 @@ func main() {
 		Hi: &pb.Point{Latitude: 420000000, Longitude: -730000000},
 	})
 
-	// RecordRoute
-	runRecordRoute(client)
-
-	// RouteChat
-	runRouteChat(client)
+	// // RecordRoute
+	// runRecordRoute(client)
+	//
+	// // RouteChat
+	// runRouteChat(client)
 }
